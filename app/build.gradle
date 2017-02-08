@@ -12,6 +12,9 @@ android {
         targetSdkVersion 23
         versionCode 1
         versionName "1.0.0"
+        jackOptions {
+            enabled false
+        }
     }
 
     buildTypes {
@@ -19,6 +22,11 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
         }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 
     // dirty hacks to handle upgraded gradle plugin 0.7+, see http://stackoverflow.com/a/21000452/1033645
@@ -58,7 +66,7 @@ dependencies {
     compile 'com.octo.android.robospice:robospice:1.4.12'
     compile 'com.octo.android.robospice:robospice-spring-android:1.4.12'
 
-    compile 'org.springframework.android:spring-android-rest-template:1.0.1.RELEASE'
+//    compile 'org.springframework.android:spring-android-rest-template:1.0.1.RELEASE'
     compile 'com.fasterxml.jackson.core:jackson-databind:2.3.3'
 
     apt "org.androidannotations:androidannotations:$AAVersion"
