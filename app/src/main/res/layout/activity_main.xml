@@ -34,8 +34,7 @@
         android:layout_toLeftOf="@id/getPageDetails"
         android:layout_alignBaseline="@id/getPageDetails"
         android:inputType="text"
-        android:hint="Type a Facebook page alias here."
-        android:text="Goyello"
+        android:hint="Type a Github username here"
         />
 
     <TableLayout

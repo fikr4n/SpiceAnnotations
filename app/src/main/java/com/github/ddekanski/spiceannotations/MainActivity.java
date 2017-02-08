@@ -1,6 +1,7 @@
 package com.github.ddekanski.spiceannotations;
 
 import android.app.Activity;
+import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
 import android.widget.EditText;
@@ -8,9 +9,10 @@ import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.github.ddekanski.spiceannotations.controller.FacebookPageRequest;
+import com.github.ddekanski.spiceannotations.controller.GeneralRequest;
 import com.github.ddekanski.spiceannotations.controller.MySpiceService;
-import com.github.ddekanski.spiceannotations.model.FacebookPage;
+import com.github.ddekanski.spiceannotations.controller.RestClient_;
+import com.github.ddekanski.spiceannotations.model.User;
 import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
@@ -25,7 +27,7 @@ import org.springframework.util.StringUtils;
 
 @EActivity(R.layout.activity_main)
 @WindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS)
-public class MainActivity extends Activity implements RequestListener<FacebookPage> {
+public class MainActivity extends Activity implements RequestListener<User> {
 
     @ViewById
     EditText pageNameInput;
@@ -45,8 +47,7 @@ public class MainActivity extends Activity implements RequestListener<FacebookPa
     @ViewById
     TextView website;
 
-    @Bean
-    FacebookPageRequest facebookPageRequest;
+    GeneralRequest<User> generalRequest;
 
     private SpiceManager spiceManager = new SpiceManager(MySpiceService.class);
 
@@ -64,38 +65,44 @@ public class MainActivity extends Activity implements RequestListener<FacebookPa
 
     @Click
     void getPageDetails() {
-        CharSequence pageName = pageNameInput.getText();
+        final CharSequence pageName = pageNameInput.getText();
         if (!StringUtils.hasText(pageName)) {
-            showMsg("Please specify a Facebook page.");
+            showMsg("Please specify the username");
             return;
         }
 
         if (isPageInCache(pageName)) {
-            showMsg("The page is already cached.");
+            showMsg("The page is already cached");
         }
 
         detailsSection.setVisibility(View.GONE);
         setProgressBarIndeterminateVisibility(true);
-        facebookPageRequest.setPageName(pageName);
-        spiceManager.execute(facebookPageRequest, pageName, DurationInMillis.ALWAYS_RETURNED, this);
+        generalRequest = new GeneralRequest<>(new RestClient_(getApplicationContext()),
+                User.class, (rest) -> rest.getUser(pageName));
+        spiceManager.execute(generalRequest, pageName, DurationInMillis.ALWAYS_RETURNED, this);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
     }
 
     private boolean isPageInCache(CharSequence pageName) {
         try {
-            return spiceManager.isDataInCache(FacebookPage.class, pageName, DurationInMillis.ALWAYS_RETURNED).get();
+            return spiceManager.isDataInCache(User.class, pageName, DurationInMillis.ALWAYS_RETURNED).get();
         } catch (Exception e) {
             return false;
         }
     }
 
     @Override
-    public void onRequestSuccess(FacebookPage facebookPage) {
+    public void onRequestSuccess(User user) {
         setProgressBarIndeterminateVisibility(false);
         detailsSection.setVisibility(View.VISIBLE);
-        name.setText(facebookPage.getName());
-        category.setText(facebookPage.getCategory());
-        about.setText(facebookPage.getAbout());
-        website.setText(facebookPage.getWebsite());
+        name.setText(user.getName());
+        category.setText(user.getType());
+        about.setText(user.getBio());
+        website.setText(user.getBlog());
     }
 
     @Override
