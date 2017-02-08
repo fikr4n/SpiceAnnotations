@@ -1,4 +1,7 @@
 apply plugin: 'com.android.application'
+apply plugin: 'android-apt'
+apply plugin: 'me.tatarka.retrolambda'
+def AAVersion = '4.2.0'
 
 android {
     compileSdkVersion 25
@@ -39,20 +42,17 @@ buildscript {
     }
     dependencies {
         classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
+        classpath 'me.tatarka:gradle-retrolambda:3.5.0'
     }
 }
 
-apply plugin: 'android-apt'
-def AAVersion = '4.2.0'
-
-apt {
+//apt {
 //    arguments {
 //        androidManifestFile variant.outputs[0].processResources.manifestFile
 //    }
-}
+//}
 
 dependencies {
-//    compile 'com.android.support:support-v4:19.1.0'
     compile 'com.android.support:appcompat-v7:25.1.1'
 
     compile 'com.octo.android.robospice:robospice:1.4.12'
