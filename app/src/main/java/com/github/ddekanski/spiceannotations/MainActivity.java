@@ -9,16 +9,13 @@ import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.github.ddekanski.spiceannotations.controller.GeneralRequest;
-import com.github.ddekanski.spiceannotations.controller.MySpiceService;
-import com.github.ddekanski.spiceannotations.controller.RestClient_;
+import com.github.ddekanski.spiceannotations.controller.Request;
+import com.github.ddekanski.spiceannotations.controller.MySpiceManager;
 import com.github.ddekanski.spiceannotations.model.User;
-import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 
-import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ViewById;
@@ -47,9 +44,7 @@ public class MainActivity extends Activity implements RequestListener<User> {
     @ViewById
     TextView website;
 
-    GeneralRequest<User> generalRequest;
-
-    private SpiceManager spiceManager = new SpiceManager(MySpiceService.class);
+    private MySpiceManager spiceManager = new MySpiceManager();
 
     @Override
     public void onStart() {
@@ -77,9 +72,8 @@ public class MainActivity extends Activity implements RequestListener<User> {
 
         detailsSection.setVisibility(View.GONE);
         setProgressBarIndeterminateVisibility(true);
-        generalRequest = new GeneralRequest<>(new RestClient_(getApplicationContext()),
-                User.class, (rest) -> rest.getUser(pageName));
-        spiceManager.execute(generalRequest, pageName, DurationInMillis.ALWAYS_RETURNED, this);
+        Request<User> userRequest = spiceManager.newRequest(User.class, (r) -> r.getUser(pageName));
+        spiceManager.execute(userRequest, pageName, DurationInMillis.ALWAYS_RETURNED, this);
     }
 
     @Override

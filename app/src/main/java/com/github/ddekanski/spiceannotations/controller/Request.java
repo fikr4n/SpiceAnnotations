@@ -2,13 +2,13 @@ package com.github.ddekanski.spiceannotations.controller;
 
 import com.octo.android.robospice.request.SpiceRequest;
 
-public class GeneralRequest<T> extends SpiceRequest<T> {
+public class Request<T> extends SpiceRequest<T> {
 
     private final Function<RestClient, T> func;
 
     private RestClient restClient;
 
-    public GeneralRequest(RestClient restClient, Class<T> clazz, Function<RestClient, T> func) {
+    public Request(RestClient restClient, Class<T> clazz, Function<RestClient, T> func) {
         super(clazz);
         this.func = func;
         this.restClient = restClient;
