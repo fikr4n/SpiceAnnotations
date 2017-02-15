@@ -54,12 +54,6 @@ buildscript {
     }
 }
 
-//apt {
-//    arguments {
-//        androidManifestFile variant.outputs[0].processResources.manifestFile
-//    }
-//}
-
 dependencies {
     compile 'com.android.support:appcompat-v7:25.1.1'
 
