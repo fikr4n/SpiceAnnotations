@@ -72,8 +72,8 @@ public class MainActivity extends Activity implements RequestListener<User> {
 
         detailsSection.setVisibility(View.GONE);
         setProgressBarIndeterminateVisibility(true);
-        Request<User> userRequest = spiceManager.newRequest(User.class, (r) -> r.getUser(pageName));
-        spiceManager.execute(userRequest, pageName, DurationInMillis.ALWAYS_RETURNED, this);
+        spiceManager.executeRequest(User.class, (r) -> r.getUser(pageName),
+                pageName, DurationInMillis.ALWAYS_RETURNED, this);
     }
 
     @Override

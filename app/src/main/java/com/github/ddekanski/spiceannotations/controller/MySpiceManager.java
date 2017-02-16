@@ -3,6 +3,7 @@ package com.github.ddekanski.spiceannotations.controller;
 import android.content.Context;
 
 import com.octo.android.robospice.SpiceManager;
+import com.octo.android.robospice.request.listener.RequestListener;
 
 public class MySpiceManager extends SpiceManager {
 
@@ -18,7 +19,17 @@ public class MySpiceManager extends SpiceManager {
         restClient = new RestClient_(context.getApplicationContext());
     }
 
-    public <T> Request<T> newRequest(Class<T> clazz, Request.Function<RestClient, T> func) {
-        return new Request<T>(restClient, clazz, func);
+    public <T> Object executeRequest(
+            Class<T> clazz, Request.Function<RestClient, T> func, Object requestCacheKey,
+            long cacheExpiryDuration, RequestListener<T> requestListener) {
+        Request<T> request = new Request<>(restClient, clazz, func);
+        execute(request, requestCacheKey, cacheExpiryDuration, requestListener);
+        return requestCacheKey;
+    }
+
+    public <T> void executeRequest(Class<T> clazz, Request.Function<RestClient, T> func,
+                                   RequestListener<T> requestListener) {
+        Request<T> request = new Request<>(restClient, clazz, func);
+        execute(request, requestListener);
     }
 }
