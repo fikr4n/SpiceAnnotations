@@ -7,7 +7,8 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
 
 import com.github.ddekanski.spiceannotations.model.User;
 
-@Rest(rootUrl = "https://api.github.com/", converters = { MappingJackson2HttpMessageConverter.class })
+@Rest(rootUrl = "https://api.github.com/", converters = {MappingJackson2HttpMessageConverter.class})
+@SuppressWarnings("WeakerAccess")
 public interface RestClient {
 
     @Get("users/{username}")
