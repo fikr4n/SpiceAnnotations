@@ -9,7 +9,6 @@ import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.github.ddekanski.spiceannotations.controller.Request;
 import com.github.ddekanski.spiceannotations.controller.MySpiceManager;
 import com.github.ddekanski.spiceannotations.model.User;
 import com.octo.android.robospice.persistence.DurationInMillis;
@@ -60,7 +59,7 @@ public class MainActivity extends Activity implements RequestListener<User> {
 
     @Click
     void getPageDetails() {
-        final CharSequence pageName = pageNameInput.getText();
+        String pageName = pageNameInput.getText().toString();
         if (!StringUtils.hasText(pageName)) {
             showMsg("Please specify the username");
             return;
@@ -72,7 +71,7 @@ public class MainActivity extends Activity implements RequestListener<User> {
 
         detailsSection.setVisibility(View.GONE);
         setProgressBarIndeterminateVisibility(true);
-        spiceManager.executeRequest(User.class, (r) -> r.getUser(pageName),
+        spiceManager.executeRequest(User.class, r -> r.getUser(pageName),
                 pageName, DurationInMillis.ALWAYS_RETURNED, this);
     }
 
